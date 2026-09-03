@@ -56,9 +56,53 @@ export default function BookingModal({
     "07:00 PM",
   ];
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
+  const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSuccess(true);
+
+    const newApt = {
+      id: `apt-${Date.now().toString().slice(-4)}`,
+      customerName: fullName || "Online Client",
+      customerPhone: phone || "+880 1700-000000",
+      customerEmail: email || "client@gmail.com",
+      isWalkIn: false,
+      branchId: "banani",
+      branchName: "Banani Branch",
+      serviceName: service || "Executive Precision Cut",
+      barberName: barber || "Any Available Barber",
+      date: date || "2026-09-05",
+      time: time || "11:30 AM",
+      amount: "$45.00",
+      status: "Pending",
+      paymentStatus: "Pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    // 1. Save to LocalStorage for instant cross-tab sync
+    if (typeof window !== "undefined") {
+      try {
+        const existing = localStorage.getItem("sellerAppointments");
+        const parsed = existing ? JSON.parse(existing) : [];
+        const updated = [newApt, ...parsed];
+        localStorage.setItem("sellerAppointments", JSON.stringify(updated));
+
+        // Trigger custom storage event for live listener
+        window.dispatchEvent(new Event("storage"));
+      } catch (err) {
+        console.error("LocalStorage save error:", err);
+      }
+    }
+
+    // 2. Send API POST request to MongoDB Express Backend
+    try {
+      await fetch("http://localhost:5000/api/seller/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newApt),
+      });
+    } catch (err) {
+      console.error("API backend post error:", err);
+    }
 
     // Trigger celebratory confetti
     confetti({
@@ -312,10 +356,6 @@ export default function BookingModal({
               <span className="text-white font-semibold">{date}</span> at{" "}
               <span className="text-white font-semibold">{time}</span> has been successfully scheduled.
             </p>
-
-            <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 text-xs text-zinc-400 max-w-sm mx-auto">
-              We have sent a SMS & Email confirmation with calendar invite to {email || phone}.
-            </div>
 
             <button
               onClick={handleResetAndClose}

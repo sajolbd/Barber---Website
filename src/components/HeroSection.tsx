@@ -6,9 +6,12 @@ import { motion } from "framer-motion";
 
 interface HeroSectionProps {
   onOpenBooking: () => void;
+  salonName?: string;
+  tagline?: string;
+  address?: string;
 }
 
-export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
+export default function HeroSection({ onOpenBooking, salonName, tagline, address }: HeroSectionProps) {
   const reviews = [
     {
       id: 1,
@@ -40,7 +43,7 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
   ];
 
   return (
-    <section className="relative min-h-screen pt-32 pb-20 overflow-hidden flex items-center bg-[#070707]">
+    <section className="relative min-h-screen pt-36 pb-20 overflow-hidden flex items-center bg-[#070707]">
       {/* Background Gradients & Ambient Glow */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -53,8 +56,16 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="lg:col-span-5 space-y-8 text-left z-20"
+            className="lg:col-span-5 space-y-6 text-left z-20"
           >
+            {salonName && (
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-xs font-bold uppercase tracking-wider mb-1">
+                <Scissors className="w-3.5 h-3.5" />
+                <span>{salonName}</span>
+                {address && <span className="text-zinc-400 font-normal">({address})</span>}
+              </div>
+            )}
+
             <div className="relative">
               <h1 className="font-serif-heading text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
                 Real Cuts by Real <br />
@@ -65,8 +76,7 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
             </div>
 
             <p className="text-zinc-400 text-base sm:text-lg max-w-lg font-normal leading-relaxed">
-              Experience the art of grooming in our premium barbershop where
-              tradition meets modern excellence.
+              {tagline || "Experience the art of grooming in our premium barbershop where tradition meets modern excellence."}
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-4">

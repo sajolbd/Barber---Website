@@ -5,9 +5,11 @@ import { ArrowRight, Menu, X, Scissors } from "lucide-react";
 
 interface NavbarProps {
   onOpenBooking: () => void;
+  salonName?: string;
+  hasTopBar?: boolean;
 }
 
-export default function Navbar({ onOpenBooking }: NavbarProps) {
+export default function Navbar({ onOpenBooking, salonName, hasTopBar = false }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -33,7 +35,9 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-40 transition-all duration-300 ${
+        hasTopBar ? "top-11 sm:top-12" : "top-0"
+      } ${
         isScrolled ? "py-3 bg-zinc-950/85 backdrop-blur-md border-b border-zinc-800/80 shadow-2xl" : "py-5 bg-transparent"
       }`}
     >
@@ -43,8 +47,8 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
             <Scissors className="w-5 h-5 text-yellow-500 transition-transform duration-300 group-hover:rotate-45" />
-            <span className="font-serif-heading font-bold text-lg tracking-widest text-yellow-500 uppercase">
-              BARBER ELITE
+            <span className="font-serif-heading font-bold text-base sm:text-lg tracking-widest text-yellow-500 uppercase">
+              {salonName || "BARBER ELITE"}
             </span>
           </a>
 
