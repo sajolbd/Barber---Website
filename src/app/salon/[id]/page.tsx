@@ -122,7 +122,7 @@ export default function SalonStorefrontPage() {
         <AboutSection />
 
         {/* Salon Services */}
-        <ServicesSection onSelectService={handleSelectService} />
+        <ServicesSection customServices={salon.services} onSelectService={handleSelectService} />
 
         {/* Salon Gallery */}
         <GallerySection />
@@ -142,6 +142,7 @@ export default function SalonStorefrontPage() {
           onClose={handleCloseBooking}
           initialService={selectedService}
           initialBarber={selectedBarber}
+          availableServices={salon.services.map((s) => ({ name: s.name, price: s.price }))}
         />
       </div>
     </main>

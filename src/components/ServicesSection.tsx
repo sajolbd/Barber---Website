@@ -6,20 +6,13 @@ import { motion } from "framer-motion";
 
 interface ServicesSectionProps {
   onSelectService: (serviceName: string, price: string) => void;
+  customServices?: Array<any>;
 }
 
-export default function ServicesSection({ onSelectService }: ServicesSectionProps) {
+export default function ServicesSection({ onSelectService, customServices }: ServicesSectionProps) {
   const [activeTab, setActiveTab] = useState("all");
 
-  const categories = [
-    { id: "all", label: "All Services" },
-    { id: "haircut", label: "Haircuts" },
-    { id: "beard", label: "Beard Care" },
-    { id: "shave", label: "Royal Shaves" },
-    { id: "packages", label: "VIP Packages" },
-  ];
-
-  const services = [
+  const defaultServices = [
     {
       id: "1",
       category: "haircut",
@@ -60,32 +53,42 @@ export default function ServicesSection({ onSelectService }: ServicesSectionProp
       description: "The complete luxury experience: Signature Cut, Full Beard Sculpting, Scalp Scrub, & Charcoal Facial.",
       features: ["Full Precision Cut", "Beard Sculpt & Shave", "Deep Scalp Detox", "Charcoal Face Mask & Drink"],
     },
-    {
-      id: "5",
-      category: "haircut",
-      title: "Junior Champion Cut",
-      price: "$30",
-      duration: "30 mins",
-      featured: false,
-      description: "Gentle, stylish cuts for young gentlemen (under 12) with complimentary soft drink and styling.",
-      features: ["Patient Hair Styling", "Fun Environment", "Wash & Blowout", "Complimentary Treat"],
-    },
-    {
-      id: "6",
-      category: "beard",
-      title: "Grey Blending & Color",
-      price: "$50",
-      duration: "40 mins",
-      featured: false,
-      description: "Subtle, natural-looking grey hair or beard blending using premium ammonia-free formulas.",
-      features: ["Natural Ammonia-Free Dye", "Beard or Hair Application", "100% Seamless Blend", "Long Lasting Tone"],
-    },
+  ];
+
+  const displayServices = customServices && customServices.length > 0
+    ? customServices.map((s, idx) => ({
+        id: s.id || `cs-${idx}`,
+        category: s.category || "all",
+        title: s.name || s.title || "Special Service",
+        price: s.price ? (s.price.startsWith("$") ? s.price : `$${s.price}`) : "$35",
+        duration: s.duration || "30 mins",
+        featured: idx === 0,
+        description: s.description || "Professional grooming service tailored for you.",
+        features: s.features || ["Professional Consultation", "Custom Styling", "Hot Towel Finish"],
+      }))
+    : defaultServices;
+
+  const dynamicCategories = Array.from(
+    new Set(displayServices.map((s) => s.category).filter((c) => c && c !== "all"))
+  ).map((cat) => ({
+    id: cat,
+    label: cat.charAt(0).toUpperCase() + cat.slice(1),
+  }));
+
+  const categories = [
+    { id: "all", label: "All Services" },
+    ...(dynamicCategories.length > 0 ? dynamicCategories : [
+      { id: "haircut", label: "Haircuts" },
+      { id: "beard", label: "Beard Care" },
+      { id: "shave", label: "Royal Shaves" },
+      { id: "packages", label: "VIP Packages" },
+    ]),
   ];
 
   const filteredServices =
     activeTab === "all"
-      ? services
-      : services.filter((s) => s.category === activeTab);
+      ? displayServices
+      : displayServices.filter((s) => s.category === activeTab);
 
   return (
     <section id="services" className="py-24 bg-[#070707] relative overflow-hidden">

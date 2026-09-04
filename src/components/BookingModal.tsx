@@ -9,6 +9,7 @@ interface BookingModalProps {
   onClose: () => void;
   initialService?: string;
   initialBarber?: string;
+  availableServices?: Array<{ name: string; price: string }>;
 }
 
 export default function BookingModal({
@@ -16,6 +17,7 @@ export default function BookingModal({
   onClose,
   initialService = "Executive Precision Cut",
   initialBarber = "Any Available Barber",
+  availableServices,
 }: BookingModalProps) {
   const [step, setStep] = useState(1);
   const [service, setService] = useState(initialService);
@@ -29,14 +31,16 @@ export default function BookingModal({
 
   if (!isOpen) return null;
 
-  const servicesList = [
-    { name: "Executive Precision Cut", price: "$45" },
-    { name: "Beard Sculpting & Trim", price: "$30" },
-    { name: "Royal Hot Towel Shave", price: "$40" },
-    { name: "The Elite Master Groom", price: "$95" },
-    { name: "Junior Champion Cut", price: "$30" },
-    { name: "Grey Blending & Color", price: "$50" },
-  ];
+  const servicesList = availableServices && availableServices.length > 0
+    ? availableServices
+    : [
+        { name: "Executive Precision Cut", price: "$45" },
+        { name: "Beard Sculpting & Trim", price: "$30" },
+        { name: "Royal Hot Towel Shave", price: "$40" },
+        { name: "The Elite Master Groom", price: "$95" },
+        { name: "Junior Champion Cut", price: "$30" },
+        { name: "Grey Blending & Color", price: "$50" },
+      ];
 
   const barbersList = [
     "Any Available Barber",
