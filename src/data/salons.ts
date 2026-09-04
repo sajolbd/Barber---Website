@@ -2,6 +2,7 @@ export interface SalonService {
   id: string;
   category: string;
   title: string;
+  name?: string;
   price: string;
   duration: string;
   featured?: boolean;

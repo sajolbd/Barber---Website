@@ -22,7 +22,7 @@ interface BookingModalProps {
   onClose: () => void;
   initialService?: string;
   initialBarber?: string;
-  availableServices?: Array<{ name: string; price: string }>;
+  availableServices?: Array<{ name?: string; title?: string; price: string }>;
 }
 
 export default function BookingModal({
@@ -57,7 +57,10 @@ export default function BookingModal({
 
   const servicesList =
     availableServices && availableServices.length > 0
-      ? availableServices
+      ? availableServices.map((s, idx) => ({
+          name: s.name || s.title || `Service ${idx + 1}`,
+          price: s.price,
+        }))
       : [
           { name: "Executive Precision Cut", price: "$45" },
           { name: "Beard Sculpting & Trim", price: "$30" },

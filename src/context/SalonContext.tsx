@@ -36,15 +36,16 @@ export function SalonProvider({ children }: { children: React.ReactNode }) {
             services: Array.isArray(s.services) && s.services.length > 0
               ? s.services.map((srv: any, idx: number) => ({
                   id: srv.id || `srv-${idx}`,
-                  name: srv.title || srv.name,
+                  title: srv.title || srv.name || "Special Service",
+                  name: srv.title || srv.name || "Special Service",
                   price: srv.price ? (srv.price.startsWith("$") ? srv.price : `$${srv.price}`) : "$35",
                   duration: srv.duration || "30 min",
                   category: srv.category || "haircut",
                 }))
               : [
-                  { id: "s1", name: "Royal Haircut & Styling", price: "$35", duration: "45 min", category: "haircut" },
-                  { id: "s2", name: "Hot Towel Beard Trim", price: "$25", duration: "30 min", category: "beard" },
-                  { id: "s3", name: "Executive Facial & Scrub", price: "$45", duration: "40 min", category: "shave" },
+                  { id: "s1", title: "Royal Haircut & Styling", name: "Royal Haircut & Styling", price: "$35", duration: "45 min", category: "haircut" },
+                  { id: "s2", title: "Hot Towel Beard Trim", name: "Hot Towel Beard Trim", price: "$25", duration: "30 min", category: "beard" },
+                  { id: "s3", title: "Executive Facial & Scrub", name: "Executive Facial & Scrub", price: "$45", duration: "40 min", category: "shave" },
                 ],
             barbers: [
               { id: "b1", name: "Master Barber", role: "Senior Stylist", experience: "8 yrs", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop" }
