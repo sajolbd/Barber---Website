@@ -4,9 +4,31 @@ import { useState } from "react";
 import { Scissors, Clock, Check, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
+interface CustomService {
+  id?: string;
+  category?: string;
+  name?: string;
+  title?: string;
+  price?: string;
+  duration?: string;
+  description?: string;
+  features?: string[];
+}
+
+interface ServiceItem {
+  id: string;
+  category: string;
+  title: string;
+  price: string;
+  duration: string;
+  featured: boolean;
+  description: string;
+  features: string[];
+}
+
 interface ServicesSectionProps {
   onSelectService: (serviceName: string, price: string) => void;
-  customServices?: Array<any>;
+  customServices?: CustomService[];
 }
 
 export default function ServicesSection({ onSelectService, customServices }: ServicesSectionProps) {
@@ -55,7 +77,7 @@ export default function ServicesSection({ onSelectService, customServices }: Ser
     },
   ];
 
-  const displayServices = customServices && customServices.length > 0
+  const displayServices: ServiceItem[] = customServices && customServices.length > 0
     ? customServices.map((s, idx) => ({
         id: s.id || `cs-${idx}`,
         category: s.category || "all",
@@ -170,7 +192,7 @@ export default function ServicesSection({ onSelectService, customServices }: Ser
 
                 {/* Feature List */}
                 <ul className="space-y-2.5 mb-8 border-t border-zinc-800/80 pt-6">
-                  {service.features.map((feat, i) => (
+                  {service.features.map((feat: string, i: number) => (
                     <li key={i} className="flex items-center gap-2.5 text-xs text-zinc-300">
                       <div className="w-4 h-4 rounded-full bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center">
                         <Check className="w-2.5 h-2.5 text-yellow-400" />

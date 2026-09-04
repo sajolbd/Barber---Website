@@ -142,7 +142,7 @@ export default function SalonStorefrontPage() {
           onClose={handleCloseBooking}
           initialService={selectedService}
           initialBarber={selectedBarber}
-          availableServices={salon.services.map((s) => ({ name: s.name, price: s.price }))}
+          availableServices={salon.services.map((s) => ({ name: s.title, price: s.price }))}
         />
       </div>
     </main>
