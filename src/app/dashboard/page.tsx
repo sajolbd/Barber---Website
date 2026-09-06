@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSalons } from "@/context/SalonContext";
 import MarketplaceNavbar from "@/components/MarketplaceNavbar";
 import Footer from "@/components/Footer";
-import { Store, Plus, Star, MapPin, ExternalLink, ShieldCheck, CheckCircle2, X } from "lucide-react";
+import { Store, Plus, Star, MapPin, ExternalLink, ShieldCheck, CheckCircle2, X, Upload, Lock, Mail, Image as ImageIcon } from "lucide-react";
 import { Salon } from "@/data/salons";
 
 export default function DashboardPage() {
@@ -23,9 +23,33 @@ export default function DashboardPage() {
   const [priceRange, setPriceRange] = useState<Salon["priceRange"]>("$$");
   const [estYear, setEstYear] = useState("2026");
 
-  const handleAddSalonSubmit = (e: React.FormEvent) => {
+  // Registration Login Credentials State
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [coverImage, setCoverImage] = useState(
+    "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop"
+  );
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          const base64Str = reader.result as string;
+          setCoverImage(base64Str);
+          setImagePreview(base64Str);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAddSalonSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !address) return;
+    if (!name || !address || !email || !password) return;
 
     // Generate safe slug id
     const generatedId = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -44,8 +68,9 @@ export default function DashboardPage() {
       isOpen: true,
       featured: true,
       estYear: estYear || "2026",
-      coverImage: "/images/barber-hero.png",
-      heroBarberImage: "/images/barber-hero.png",
+      status: "Pending Approval",
+      coverImage: coverImage || "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop",
+      heroBarberImage: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=800&auto=format&fit=crop",
       aboutText: `${name} is a premier ${category} located in ${city}, providing top-tier cuts, beard styling, and luxury pampering.`,
       workingHours: {
         weekdays: "09:00 AM – 08:00 PM",
@@ -81,7 +106,7 @@ export default function DashboardPage() {
           role: "Lead Stylist",
           experience: "10 Years Exp.",
           specialty: "Precision Fades & Scissor Work",
-          image: "/images/barber-hero.png",
+          image: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=800&auto=format&fit=crop",
           bio: "Experienced barber craftsman.",
         },
       ],
@@ -89,20 +114,47 @@ export default function DashboardPage() {
       reviews: [],
     };
 
+    // Also attempt registering directly with live backend API if available
+    try {
+      await fetch("http://localhost:5000/api/seller/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          shopName: name,
+          ownerName: "Partner Owner",
+          email: email.toLowerCase(),
+          password: password,
+          phone: phone || "+880 1700-000000",
+          city,
+          address,
+          tradeLicenseNumber: `TRD-2026-${Math.floor(10000 + Math.random() * 90000)}`,
+          nidNumber: `NID-2026-${Math.floor(1000000 + Math.random() * 9000000)}`,
+          category,
+          tagline,
+          coverImage,
+        }),
+      });
+    } catch (err) {
+      console.log("Backend offline, using client context");
+    }
+
     addSalon(newSalonData);
     setIsAddModalOpen(false);
 
     // Reset form fields
     setName("");
     setTagline("");
+    setEmail("");
+    setPassword("");
     setAddress("");
     setPhone("");
+    setImagePreview(null);
 
     // Show toast
-    setSuccessToast(`Successfully added "${newSalonData.name}" to Marketplace!`);
+    setSuccessToast(`Application for "${newSalonData.name}" submitted! Status: PENDING SUPER ADMIN APPROVAL.`);
     setTimeout(() => {
       setSuccessToast(null);
-    }, 4000);
+    }, 5000);
   };
 
   return (
@@ -279,6 +331,46 @@ export default function DashboardPage() {
                 />
               </div>
 
+              {/* Owner Login Credentials (Email & Password) */}
+              <div className="p-3.5 rounded-2xl bg-zinc-900/80 border border-yellow-500/30 space-y-3">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-yellow-400 flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Seller Dashboard Login Credentials *</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-zinc-300 mb-1">Email *</label>
+                    <div className="relative">
+                      <Mail className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-3" />
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="owner@salon.com"
+                        className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs focus:border-yellow-500 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-zinc-300 mb-1">Password *</label>
+                    <div className="relative">
+                      <Lock className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-3" />
+                      <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs focus:border-yellow-500 outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1">
                   Tagline / Motto
@@ -338,6 +430,60 @@ export default function DashboardPage() {
                   placeholder="e.g. House 45, Road 7, Block D, Dhanmondi, Dhaka"
                   className="w-full p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs focus:border-yellow-500 outline-none"
                 />
+              </div>
+
+              {/* Clean Image File Upload Control */}
+              <div className="space-y-2 pt-2 border-t border-zinc-800/80">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1">
+                  Shop Card Feature / Cover Image *
+                </label>
+
+                <div className="relative border-2 border-dashed border-zinc-800 hover:border-yellow-500/50 bg-zinc-900/60 rounded-2xl p-4 text-center transition-all">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageFileUpload}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+
+                  {coverImage ? (
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-16 h-12 rounded-xl bg-cover bg-center border border-yellow-500/40 flex-shrink-0 shadow-md"
+                          style={{ backgroundImage: `url(${coverImage})` }}
+                        />
+                        <div className="text-left">
+                          <div className="text-xs font-bold text-white flex items-center gap-1">
+                            <ImageIcon className="w-3.5 h-3.5 text-yellow-500" />
+                            <span>Feature Image Loaded</span>
+                          </div>
+                          <div className="text-[10px] text-zinc-400">Click to change or select another file</div>
+                        </div>
+                      </div>
+
+                      <span className="px-3 py-1 rounded-xl bg-zinc-800 text-yellow-400 text-xs font-bold border border-zinc-700">
+                        Change Image
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="py-2 space-y-1">
+                      <Upload className="w-6 h-6 text-yellow-500 mx-auto" />
+                      <div className="text-xs font-bold text-white">Click or drag image file here to upload</div>
+                      <div className="text-[10px] text-zinc-500">Supports JPG, PNG, WEBP</div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-1">
+                  <input
+                    type="url"
+                    value={coverImage}
+                    onChange={(e) => setCoverImage(e.target.value)}
+                    placeholder="Or paste direct image URL (https://...)"
+                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-yellow-400 font-mono text-[11px] outline-none focus:border-yellow-500"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-3 gap-3">

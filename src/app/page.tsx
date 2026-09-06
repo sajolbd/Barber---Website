@@ -19,6 +19,8 @@ export default function MarketplaceHome() {
   const cities = ["All", "Dhaka", "Chittagong", "New York", "Sylhet"];
 
   const filteredSalons = salons.filter((salon) => {
+    if (salon.status === "Pending Approval") return false;
+
     const matchesSearch =
       salon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       salon.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||

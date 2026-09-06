@@ -130,11 +130,11 @@ export default function HeroSection({ onOpenBooking, salonName, tagline, address
             >
               <div className="relative w-full h-full max-w-md">
                 <Image
-                  src="/images/barber-hero.png"
+                  src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=1000&auto=format&fit=crop"
                   alt="Barber Elite Master Barber"
                   fill
                   priority
-                  className="object-contain object-bottom filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
+                  className="object-cover object-top rounded-3xl filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
                 />
               </div>
             </motion.div>

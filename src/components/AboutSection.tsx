@@ -29,10 +29,10 @@ export default function AboutSection() {
             <div className="relative mx-auto max-w-md lg:max-w-none">
               <div className="relative h-[400px] sm:h-[480px] rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl">
                 <Image
-                  src="/images/barber-hero.png"
+                  src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1000&auto=format&fit=crop"
                   alt="Barber Elite Heritage"
                   fill
-                  className="object-cover object-top filter brightness-90 contrast-105"
+                  className="object-cover object-center filter brightness-90 contrast-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
               </div>

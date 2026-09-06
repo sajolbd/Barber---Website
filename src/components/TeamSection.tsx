@@ -16,7 +16,7 @@ export default function TeamSection({ onSelectBarber }: TeamSectionProps) {
       role: "Lead Master Barber",
       experience: "14 Years Exp.",
       specialty: "Precision Fades & Tapers",
-      image: "/images/barber-hero.png",
+      image: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=800&auto=format&fit=crop",
       bio: "Trained in London and Milan. Specialist in sharp razor line-ups and modern drop fades.",
     },
     {
@@ -25,7 +25,7 @@ export default function TeamSection({ onSelectBarber }: TeamSectionProps) {
       role: "Beard Specialist",
       experience: "10 Years Exp.",
       specialty: "Royal Hot Towel Shaves & Beard Art",
-      image: "/images/barber-hero.png",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
       bio: "Craftsman of luxurious beard treatments and classic straight razor shaves.",
     },
     {
@@ -34,7 +34,7 @@ export default function TeamSection({ onSelectBarber }: TeamSectionProps) {
       role: "Senior Stylist",
       experience: "8 Years Exp.",
       specialty: "Gentleman Pompadours & Hair Color",
-      image: "/images/barber-hero.png",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
       bio: "Expert in vintage scissor cuts, grey blending, and textured executive styling.",
     },
   ];
